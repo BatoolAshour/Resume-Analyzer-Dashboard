@@ -9,18 +9,61 @@ def render_upload_ui():
     with col1:
         resume_file = st.file_uploader("Resume (PDF / DOCX / TXT)", type=["pdf", "docx", "txt"])
     with col2:
-        jd_input_mode = st.radio("Job description input", ["Paste text", "Upload file"], horizontal=True)
+        st.caption("Optional — leave empty to just check ATS-friendliness of your resume")
+        jd_input_mode = st.radio(
+            "Job description (optional)", ["None", "Paste text", "Upload file"], horizontal=True
+        )
         if jd_input_mode == "Paste text":
             jd_text_raw = st.text_area("Paste job description here", height=200)
             jd_file = None
-        else:
+        elif jd_input_mode == "Upload file":
             jd_file = st.file_uploader("Job Description (PDF / DOCX / TXT)", type=["pdf", "docx", "txt"], key="jd")
             jd_text_raw = None
+        else:
+            jd_text_raw, jd_file = None, None
 
     return resume_file, jd_text_raw, jd_file
 
 
 def render_results(r: dict):
+    if r.get("mode") == "ats_only":
+        render_ats_only_results(r)
+    else:
+        render_comparison_results(r)
+
+
+def render_ats_only_results(r: dict):
+    st.divider()
+    st.metric("ATS Score", f"{r['ats_score']}/100")
+    st.progress(r["ats_score"] / 100, text="ATS Readiness")
+    st.info(r["summary"])
+
+    c1, c2 = st.columns(2)
+    with c1:
+        st.subheader("✅ Detected Sections")
+        st.write(", ".join(r.get("detected_sections", [])) or "None found")
+
+        st.subheader("🛠️ Detected Skills")
+        st.write(", ".join(r.get("detected_skills", [])) or "None found")
+
+        st.subheader("💪 Strengths")
+        for item in r.get("strengths", []):
+            st.write(f"- {item}")
+
+    with c2:
+        st.subheader("⚠️ Missing Sections")
+        st.write(", ".join(r.get("missing_sections", [])) or "None — all standard sections present")
+
+        st.subheader("🚩 Formatting Issues")
+        issues = r.get("formatting_issues", [])
+        if issues:
+            for item in issues:
+                st.write(f"- {item}")
+        else:
+            st.write("No major issues detected.")
+
+
+def render_comparison_results(r: dict):
     st.divider()
     m1, m2, m3 = st.columns(3)
     m1.metric("Resume–Job Match", f"{r['match_percent']}%")
