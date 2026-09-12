@@ -1,12 +1,16 @@
 import os
 
-# Ollama runs locally — no API key needed.
-# Pull models first: `ollama pull llama3.1` (or whichever you want below)
-OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
+from dotenv import load_dotenv
 
-# One model per task — swap freely, e.g. use a bigger model for scoring.
-MODEL_SKILLS = "llama3.1"
-MODEL_SCORING = "llama3.1"
-MODEL_RECOMMENDATIONS = "llama3.1"
+load_dotenv()
 
-MAX_TOKENS = 1500
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+
+# NOTE: gpt-oss-20b is NOT free — $0.075/1M input, $0.30/1M output tokens.
+# Cheap, but not $0 like allam-2-7b was.
+MODEL_SKILLS = "openai/gpt-oss-20b"
+MODEL_SCORING = "openai/gpt-oss-20b"
+MODEL_RECOMMENDATIONS = "openai/gpt-oss-20b"
+MODEL_ATS_CHECK = "openai/gpt-oss-20b"  # standalone resume-only ATS check
+
+MAX_TOKENS = 2500
