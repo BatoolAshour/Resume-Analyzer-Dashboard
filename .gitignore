@@ -1,5 +1,20 @@
-.venv
+# Secrets
 .env
+.env.*
+!.env.example
+
+# Python
+.venv/
+venv/
 __pycache__/
 *.pyc
- 
+.pytest_cache/
+
+# Node / Next.js (see also frontend/.gitignore)
+node_modules/
+.next/
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
