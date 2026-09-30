@@ -1,0 +1,189 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Design tokens. Components use these through the Tailwind theme below, so
+   light and dark mode never need per-component overrides. */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #f1f3f6;
+  --border: #e3e6ec;
+  --border-strong: #cdd2db;
+
+  --text: #0f1729;
+  --text-2: #465065;
+  --text-3: #667085;
+
+  --brand: #4f46e5;
+  --brand-hover: #4338ca;
+  --brand-soft: #eef0ff;
+  --brand-ink: #3f37c9;
+
+  /* Status colours: always paired with an icon and a label. */
+  --good: #0ca30c;
+  --good-soft: #e7f6e7;
+  --good-ink: #0a6410;
+  --warn: #f0a20a;
+  --warn-soft: #fff4d9;
+  --warn-ink: #855600;
+  --serious: #ec835a;
+  --serious-soft: #fdeee7;
+  --serious-ink: #9c4420;
+  --crit: #d03b3b;
+  --crit-soft: #fdecec;
+  --crit-ink: #a52a2a;
+
+  --shadow-card: 0 1px 2px rgb(15 23 41 / 0.04), 0 8px 24px -12px rgb(15 23 41 / 0.1);
+  --grid-line: rgb(15 23 41 / 0.045);
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: #0a0c11;
+  --surface: #11141b;
+  --surface-2: #181c25;
+  --border: #232833;
+  --border-strong: #343b49;
+
+  --text: #f1f3f7;
+  --text-2: #b3bac7;
+  --text-3: #8891a1;
+
+  --brand: #6d6ff5;
+  --brand-hover: #8486ff;
+  --brand-soft: #1a1c3a;
+  --brand-ink: #aeb1ff;
+
+  --good: #22b83a;
+  --good-soft: #0f2717;
+  --good-ink: #72e08a;
+  --warn: #fab219;
+  --warn-soft: #2a210d;
+  --warn-ink: #fbc95c;
+  --serious: #ec835a;
+  --serious-soft: #2e1b12;
+  --serious-ink: #f6a685;
+  --crit: #e25555;
+  --crit-soft: #2e1417;
+  --crit-ink: #f59393;
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 12px 32px -16px rgb(0 0 0 / 0.6);
+  --grid-line: rgb(255 255 255 / 0.04);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-muted: var(--surface-2);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+
+  --color-ink: var(--text);
+  --color-ink-2: var(--text-2);
+  --color-ink-3: var(--text-3);
+
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-ink: var(--brand-ink);
+
+  --color-good: var(--good);
+  --color-good-soft: var(--good-soft);
+  --color-good-ink: var(--good-ink);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-warn-ink: var(--warn-ink);
+  --color-serious: var(--serious);
+  --color-serious-soft: var(--serious-soft);
+  --color-serious-ink: var(--serious-ink);
+  --color-crit: var(--crit);
+  --color-crit-soft: var(--crit-soft);
+  --color-crit-ink: var(--crit-ink);
+
+  --shadow-card: var(--shadow-card);
+
+  --animate-fade-up: fade-up 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-fade-in: fade-in 0.3s ease-out both;
+  --animate-grow-x: grow-x 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-ring: ring 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes grow-x {
+    from {
+      transform: scaleX(0);
+    }
+  }
+  @keyframes ring {
+    from {
+      stroke-dashoffset: var(--ring-length);
+    }
+  }
+  @keyframes shimmer {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--brand) 25%, transparent);
+}
+
+/* In the base layer so components can replace it with their own focus style. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+}
+
+/* Faint grid behind the hero. */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 70% 80% at 50% 0%, #000 40%, transparent 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
